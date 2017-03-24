@@ -1,0 +1,172 @@
+---
+title: "crime"
+author: "黃俊凱"
+date: "2017年3月20日"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+rm(list=ls())
+
+install.packages("readxl")
+
+library(readxl)
+
+panel <- read_excel("C:/Users/User/Desktop/論文總檔案/panel data_run.xlsx")
+
+head(panel)
+
+str(panel)
+
+install.packages("ggplot2")
+
+library(ggplot2)
+
+install.packages("plm")
+
+library(plm)
+
+pdata <- pdata.frame(panel, index=c("State","Year"), drop.index=TRUE, row.names=TRUE)
+
+head(pdata)
+
+View(pdata)
+
+summary(pdata)
+
+#全般刑案發生率
+
+*OLS模型*
+
+**人口密度**
+
+pooling <- plm(total ~ Un + Wage + Population + Youthde  , data=pdata, model= "pooling")
+
+summary(pooling)
+
+**年齡結構**
+
+pooling1 <- plm(total ~ Un + Wage + Person25 + Person30 + Person40 + Person50 + Person60  + Youthde  , data=pdata, model= "pooling")
+
+summary(pooling1)
+
+**性別與年齡結構**
+
+pooling2 <- plm(total ~ Un + Wage + Male25 + Male30 + Male40 + Male50 +  Youthde  , data=pdata, model= "pooling")
+
+summary(pooling2)
+
+**勞動就業-年齡**
+
+pooling3 <- plm(total ~ Wage + Population + Jobp25 + Jobp35 + Jobp45 + Jobp55 +Youthde  , data=pdata, model= "pooling")
+
+summary(pooling3)
+
+**勞動就業-年齡&性別**
+
+pooling4 <- plm(total ~ Wage + Population + Jobm25 + Jobm35 + Jobm45 + Jobm55 +Youthde  , data=pdata, model= "pooling")
+
+summary(pooling4)
+
+*固定效果模型*
+
+
+**人口密度**
+
+fixed <- plm(total ~ Un + Wage + Population + Youthde  , data=pdata, model= "within")
+
+summary(fixed)
+
+**年齡結構**
+
+fixed1 <- plm(total ~ Un + Wage + Person25 + Person30 + Person40 + Person50 + Person60  + Youthde  , data=pdata, model= "within")
+
+summary(fixed1)
+
+**性別與年齡結構**
+
+fixed2 <- plm(total ~ Un + Wage + Male25 + Male30 + Male40 + Male50 +  Youthde  , data=pdata, model= "within")
+
+summary(fixed2)
+
+**勞動就業-年齡**
+
+fixed3 <- plm(total ~ Wage + Population + Jobp25 + Jobp35 + Jobp45 + Jobp55 +Youthde  , data=pdata, model= "within")
+
+summary(fixed3)
+
+**勞動就業-年齡&性別**
+
+fixed4 <- plm(total ~ Wage + Population + Jobm25 + Jobm35 + Jobm45 + Jobm55 +Youthde  , data=pdata, model= "within")
+
+summary(fixed4)
+
+*隨機效果模型*
+
+**人口密度**
+
+random <- plm(total ~ Un + Wage + Population + Youthde  , data=pdata, model= "random")
+
+summary(random)
+
+**年齡結構**
+
+random1 <- plm(total ~ Un + Wage + Person25 + Person30 + Person40 + Person50 + Person60  + Youthde  , data=pdata, model= "random")
+
+summary(random1)
+
+**性別與年齡結構**
+
+random2 <- plm(total ~ Un + Wage + Male25 + Male30 + Male40 + Male50 +  Youthde  , data=pdata, model= "random")
+
+summary(random2)
+
+**勞動就業-年齡**
+
+random3 <- plm(total ~ Wage + Population + Jobp25 + Jobp35 + Jobp45 + Jobp55 +Youthde  , data=pdata, model= "random")
+
+summary(random3)
+
+**勞動就業-年齡&性別**
+
+random4 <- plm(total ~ Wage + Population + Jobm25 + Jobm35 + Jobm45 + Jobm55 +Youthde  , data=pdata, model= "random")
+
+summary(random4)
+
+*檢定*
+plmtest(pooling)
+
+pFtest(fixed, pooling)
+
+phtest(random, fixed)
+
+*檢定1*
+plmtest(pooling1)
+
+pFtest(fixed1, pooling1)
+
+phtest(random1, fixed1)
+
+*檢定2*
+plmtest(pooling2)
+
+pFtest(fixed2, pooling2)
+
+phtest(random2, fixed2)
+
+*檢定3*
+plmtest(pooling3)
+
+pFtest(fixed3, pooling3)
+
+phtest(random3, fixed3)
+
+*檢定4*
+plmtest(pooling4)
+
+pFtest(fixed4, pooling4)
+
+phtest(random4, fixed4)
